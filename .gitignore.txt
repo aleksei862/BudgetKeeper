@@ -1,0 +1,30 @@
+# Виртуальное окружение
+venv/
+env/
+.venv/
+
+# Python кэш
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Переменные окружения (СЕКРЕТНЫЕ ДАННЫЕ)
+.env
+.env.local
+
+# База данных SQLite (если используешь ее локально для тестов)
+db.sqlite3
+db.sqlite3-journal
+
+# Настройки IDE (VS Code, PyCharm)
+.vscode/
+.idea/
+*.swp
+
+# Статика и медиа (если они собираются автоматически)
+staticfiles/
+media/
+
+# ОС
+.DS_Store
+Thumbs.db
