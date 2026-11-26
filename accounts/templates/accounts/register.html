@@ -1,18 +1,37 @@
 {% extends 'accounts/base.html' %}
 {% block content %}
-<h2>Регистрация</h2>
-<form method="post" id="register-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Зарегистрироваться</button>
-</form>
+<div class="form-container">
+    <h2 style="margin-bottom: 20px; text-align: center;">Регистрация</h2>
+    <form method="post" id="register-form">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn" style="width: 100%;">Зарегистрироваться</button>
+    </form>
+</div>
+
 <script>
+// Простая JS-валидация, которая меняет цвет рамки
 document.getElementById('register-form').addEventListener('submit', function(e) {
-    const email = document.querySelector('input[name="email"]').value;
     const pass1 = document.querySelector('input[name="password1"]').value;
     const pass2 = document.querySelector('input[name="password2"]').value;
-    if (pass1 !== pass2) { e.preventDefault(); alert('Пароли не совпадают'); }
-    if (!email.includes('@')) { e.preventDefault(); alert('Введите корректный email'); }
+
+    if (pass1 !== pass2) {
+        e.preventDefault();
+        alert('Пароли не совпадают');
+        document.querySelector('input[name="password2"]').classList.add('error');
+    }
 });
 </script>
 {% endblock %}

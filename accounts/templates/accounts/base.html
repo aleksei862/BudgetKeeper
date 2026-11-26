@@ -1,23 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BudgetKeeper</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 <body>
-    <nav style="margin-bottom: 20px; padding: 10px; background: #eee;">
-        <a href="/">Главная</a> |
-        <a href="{% url 'profile' %}">Личный кабинет</a>
+    <header>
+        <div class="container">
+            <nav class="header-nav">
+                <div>
+                    <a href="/" style="font-size: 20px; font-weight: bold; color: var(--primary-color);">BudgetKeeper</a>
+                </div>
+                <div>
+                    <a href="{% url 'profile' %}">Личный кабинет</a>
+                    {% if user.is_authenticated %}
+                        {% if user.role == 'admin' %}
+                            <a href="{% url 'admin_dashboard' %}">Админ-панель</a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}">Выйти</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Войти</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
 
-        {% if request.user.is_authenticated %}
-            {% if request.user.role == 'admin' %}
-                | <a href="{% url 'admin_dashboard' %}">Панель управления</a>
-            {% endif %}
-            | <a href="{% url 'logout' %}">Выйти</a>
+    <main class="container">
+        {% if messages %}
+            <div style="margin-bottom: 20px;">
+                {% for message in messages %}
+                    <div style="padding: 10px; background: #d1fae5; color: #065f46; border-radius: 5px; margin-bottom: 10px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-    </nav>
 
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li class="{{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+    </main>
 </body>
+</html>
