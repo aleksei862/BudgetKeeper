@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import RegisterForm, LoginForm
 from .decorators import role_required
+from django.core.exceptions import PermissionDenied
 
 def register_view(request):
     if request.method == 'POST':
@@ -115,3 +116,27 @@ def reset_password_view(request, token):
     else:
         form = ResetPasswordForm()
     return render(request, 'accounts/reset_password.html', {'form': form})
+
+
+from django.shortcuts import get_object_or_404
+from .forms import ProfileEditForm
+
+
+@login_required
+def edit_profile_view(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+
+    # Проверка: либо это сам пользователь, либо админ
+    if request.user.id != target_user.id and request.user.role != 'admin':
+        raise PermissionDenied("Вы можете редактировать только свой профиль")
+
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, instance=target_user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Профиль обновлен.')
+            return redirect('profile')
+    else:
+        form = ProfileEditForm(instance=target_user)
+
+    return render(request, 'accounts/edit_profile.html', {'form': form, 'target_user': target_user})

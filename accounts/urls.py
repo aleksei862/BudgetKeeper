@@ -9,4 +9,5 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
     path('reset-password/<str:token>/', views.reset_password_view, name='reset_password'),
+    path('profile/edit/<int:user_id>/', views.edit_profile_view, name='edit_profile'),
 ]

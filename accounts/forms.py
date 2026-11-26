@@ -30,3 +30,8 @@ class ResetPasswordForm(forms.Form):
         if cleaned_data.get("password") != cleaned_data.get("confirm_password"):
             raise forms.ValidationError("Пароли не совпадают.")
         return cleaned_data
+
+class ProfileEditForm(forms.ModelForm):
+ class Meta:
+    model = User
+    fields = ('username', 'email')
