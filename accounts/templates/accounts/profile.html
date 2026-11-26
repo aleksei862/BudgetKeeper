@@ -1,0 +1,6 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<h2>Личный кабинет</h2>
+<p>Привет, {{ user.username }}! Твоя роль: {{ user.role }}</p>
+<a href="{% url 'logout' %}">Выйти</a>
+{% endblock %}
