@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'finance',
     'accounts',
     'api',
+    'rest_framework',
 
 ]
 
