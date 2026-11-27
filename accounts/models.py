@@ -28,3 +28,9 @@ class PasswordResetToken(models.Model):
 
     def is_valid(self):
         return not self.is_used and self.expires_at > timezone.now()
+
+    class Profile(models.Model):
+        user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+        full_name = models.CharField(max_length=150, blank=True)
+        phone = models.CharField(max_length=20, blank=True)
+        created_at = models.DateTimeField(auto_now_add=True)
