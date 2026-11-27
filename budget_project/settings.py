@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'api',
     'rest_framework',
-    'ai_agent'
+    'agent_app',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'budget_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'agent_app' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

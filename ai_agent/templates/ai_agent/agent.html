@@ -1,0 +1,55 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 20px;">
+    <h2>Чат с ИИ-агентом</h2>
+    <div id="chat-box" style="border: 1px solid #ccc; border-radius: 8px; height: 400px; overflow-y: auto; padding: 15px; background: #fff; margin-bottom: 15px;">
+        {% for msg in history %}
+            <div style="margin-bottom: 10px; text-align: {% if msg.role == 'user' %}right{% else %}left{% endif %};">
+                <span style="display: inline-block; padding: 10px; border-radius: 8px; max-width: 70%; background: {% if msg.role == 'user' %}#dcf8c6{% else %}#f1f0f0{% endif %};">
+                    <b>{% if msg.role == 'user' %}Вы{% else %}ИИ-Агент{% endif %}:</b><br>
+                    {{ msg.content }}
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="msg-input" class="form-control" placeholder="Напишите сообщение..." style="flex: 1; padding: 10px;">
+        <button id="send-btn" class="btn">Отправить</button>
+    </div>
+</div>
+
+<script>
+document.getElementById('send-btn').addEventListener('click', sendMessage);
+document.getElementById('msg-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') sendMessage();
+});
+
+function sendMessage() {
+    const input = document.getElementById('msg-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    // Выводим сообщение пользователя сразу
+    const chatBox = document.getElementById('chat-box');
+    chatBox.innerHTML += `<div style="text-align: right; margin-bottom: 10px;"><span style="display: inline-block; padding: 10px; border-radius: 8px; background: #dcf8c6;"><b>Вы:</b><br>${text}</span></div>`;
+    input.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Отправляем на сервер
+    const formData = new FormData();
+    formData.append('message', text);
+
+    fetch('/agent/send/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        chatBox.innerHTML += `<div style="text-align: left; margin-bottom: 10px;"><span style="display: inline-block; padding: 10px; border-radius: 8px; background: #f1f0f0;"><b>ИИ-Агент:</b><br>${data.reply}</span></div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+}
+</script>
+{% endblock %}
